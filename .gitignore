@@ -1,5 +1,6 @@
 # Project
 assets/
+.#*
 
 # Mac
 .DS_Store
