@@ -30,7 +30,7 @@ def make_tree_count(data, col_binary, movement_side, movement_down):
 
     for row, value in enumerate(data[col_binary]):
         if row + movement_down >= total_rows:
-            continue
+            break
 
         elif row != total_row:
             continue
