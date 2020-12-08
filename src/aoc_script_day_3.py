@@ -75,5 +75,3 @@ print(make_tree_runs(data,
                      col_binary='binary',
                      right_movements=right_values,
                      down_movements=down_values))
-
-print(make_tree_count(data, col_binary='binary', movement_side=7, movement_down=1))
