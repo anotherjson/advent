@@ -26,22 +26,28 @@ def make_tree_count(data, col_binary, movement_side, movement_down):
     total_rows = len(data.iloc[:, 0])
     total_value = 0
     total_place = 0
+    total_row = 0
 
     for row, value in enumerate(data[col_binary]):
-        if row >= total_rows - movement_down:
+        if row + movement_down >= total_rows:
+            continue
+
+        elif row != total_row:
             continue
 
         else:
             if total_place + movement_side >= row_length:
                 total_place = total_place + movement_side - row_length
+                total_row = row + movement_down
                 total_value += int(
-                    data.at[row + movement_down, 'binary'][total_place]
+                    data.at[total_row, 'binary'][total_place]
                 )
 
             else:
                 total_place = total_place + movement_side
+                total_row = row + movement_down
                 total_value += int(
-                    data.at[row + movement_down, 'binary'][total_place]
+                    data.at[total_row, 'binary'][total_place]
                 )
 
     return total_value
