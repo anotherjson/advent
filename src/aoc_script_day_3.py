@@ -21,29 +21,53 @@ def make_data(dir_folder='assets',
 def make_binary(data, col_values):
     return data[col_values].str.replace('.', '0').str.replace('#', '1')
 
+def make_tree_count(data, col_binary, movement_side, movement_down):
+    row_length = len(data.iloc[0, 0])
+    total_rows = len(data.iloc[:, 0])
+    total_value = 0
+    total_place = 0
+
+    for row, value in enumerate(data[col_binary]):
+        if row >= total_rows - movement_down:
+            continue
+
+        else:
+            if total_place + movement_side >= row_length:
+                total_place = total_place + movement_side - row_length
+                total_value += int(
+                    data.at[row + movement_down, 'binary'][total_place]
+                )
+
+            else:
+                total_place = total_place + movement_side
+                total_value += int(
+                    data.at[row + movement_down, 'binary'][total_place]
+                )
+
+    return total_value
+
+def make_tree_runs(data, col_binary, right_movements, down_movements):
+    total_product = 1
+
+    for number, right in enumerate(right_movements):
+        total_product = total_product * make_tree_count(data,
+                                                        col_binary,
+                                                        right,
+                                                        down_movements[number])
+
+    return total_product
+
 # Assumptions
+right_values = [1, 3, 5, 7, 1]
+down_values = [1, 1, 1, 1, 2]
 
 # Import data
 data = make_data()
-print(data)
-print(data.info())
 
 # Measure position
-row_length = len(data.iloc[0, 0])
-total_rows = len(data.iloc[:, 0])
-print('row_length:', row_length)
-print('total_rows:', total_rows)
-total_value = 0
-total_place = 0
-movement = 3
-for row, value in enumerate(data['binary']):
-    if row == total_rows - 1:
-        continue
-    else:
-        if total_place + movement >= row_length:
-            total_place = total_place + movement - row_length
-            total_value += int(data.at[row + 1, 'binary'][total_place])
-        else:
-            total_place = total_place + movement
-            total_value += int(data.at[row + 1, 'binary'][total_place])
-print('total_value:', total_value)
+print(make_tree_runs(data,
+                     col_binary='binary',
+                     right_movements=right_values,
+                     down_movements=down_values))
+
+print(make_tree_count(data, col_binary='binary', movement_side=7, movement_down=1))
